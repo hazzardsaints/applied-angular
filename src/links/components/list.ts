@@ -1,12 +1,13 @@
+import { DatePipe } from '@angular/common';
 import { httpResource } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  signal,
+  inject,
 } from '@angular/core';
+import { LinksStore } from '../stores/links';
 import { ApiLinkItem } from '../types';
-import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-links-list',
@@ -45,12 +46,13 @@ export class List {
   linksResource = httpResource<ApiLinkItem[]>(() => ({
     url: 'https://api.some-fake-server.com/links',
   }));
+  //   sortOptions = signal<SortingOptions>('OldestFirst');
 
-  sortOptions = signal<'NewestFirst' | 'OldestFirst'>('OldestFirst');
+  store = inject(LinksStore);
 
   sortedList = computed(() => {
     const links = this.linksResource.value() || [];
-    const sortingBy = this.sortOptions();
+    const sortingBy = this.store.sortingBy();
 
     return [...links].sort((lhs, rhs) => {
       const aDate = new Date(lhs.added);
