@@ -1,4 +1,3 @@
-import { signal } from '@angular/core';
 import { delay, http, HttpResponse } from 'msw';
 
 const Articles = [
@@ -85,6 +84,7 @@ export const articlesHandlers = [
   http.get('https://api.some-fake-server.com/links', async () => {
     await delay(3000); // 100 - 200ms delay, simulating close to real world.
     //return HttpResponse.json([]);
+
     return HttpResponse.json(Articles);
   }),
 ];
